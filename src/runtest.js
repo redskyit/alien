@@ -16,9 +16,10 @@ function processSetCookies(cookies, result) {
   }
 }
 
-function makeHeaders(headers, cookies) {
+function makeHeaders(alien, headers, cookies) {
   const cookie = [];
   const meta = new Map();
+  meta.set('User-Agent', alien.userAgent);
   if (headers) Object.keys(headers).forEach(k => meta.set(k, headers[k]));
   if (cookies) Object.keys(cookies).forEach(k => cookie.push(`${k}=${cookies[k]}`));
   if (cookie.length) meta.set('Cookie', cookie.join('; '));
@@ -28,7 +29,7 @@ function makeHeaders(headers, cookies) {
 async function HTTP(request, { alien, batchIndex, requestIndex, results, cookies }) {
   const { url, method = 'GET', body, headers } = request;
   const start = Date.now();
-  const res = await fetch(url, { method, body, headers: makeHeaders(headers, request.cookies) });
+  const res = await fetch(url, { method, body, headers: makeHeaders(alien, headers, request.cookies) });
   const took = Date.now() - start;
   const { status, statusText } = res;
   const responseText = await res.text();

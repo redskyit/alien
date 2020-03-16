@@ -4,9 +4,11 @@ const path = require('path');
 const runtest = require('./runtest');
 const { analyze } = require('./analysis');
 const api = require('./api');
-program.version('1.0.2');
+
+const VERSION = '1.0.4';
 
 // Define main program options
+program.version(VERSION);
 program
   .option('--version', 'Show program version')
   .option('--help', 'Show help')
@@ -47,7 +49,9 @@ async function run(argv) {
   const concurrentRequests = (program.C|0) || 1;
   const tests = [];
 
+  const userAgent = `Alien/${VERSION}; http://github/redskyit/alien`;
   let alien = {
+    version: VERSION,
     api,
     args,
     env: process.env,
@@ -77,7 +81,7 @@ async function run(argv) {
 
       // Create a test instance for this test run. It must be separate from other test runs,
       // except for some shared properties, api, args, env, tests and shared.
-      const alienTestInstance = { api, args, env: alien.env, tests: alien.tests, shared: alien.shared, run };
+      const alienTestInstance = { api, args, env: alien.env, tests: alien.tests, shared: alien.shared, run, userAgent };
 
       // Run the test
       await runtest(module, alienTestInstance);
