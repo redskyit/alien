@@ -1,0 +1,28 @@
+{
+  "name": "alien",
+  "version": "1.0.3",
+  "description": "Automated Load Inducing Emulation Network",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "build": "npm run clean && npm run bundle && npm run package",
+    "clean": "rimraf dist/*",
+    "bundle": "browserify --node --exclude supports-color src/index.js | uglifyjs >dist/alien.js",
+    "package": "pkg -t node10-win-x64,node10-linux-x64,node10-macos-x64 --output dist/alien src/index.js",
+    "archive": "cd dist && tar cvz * > ../alien-${npm_package_version}.tgz",
+    "env": "env",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "austin.france@redskyit.com",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^4.1.1",
+    "encoding": "^0.1.12",
+    "node-fetch": "^2.6.0"
+  },
+  "devDependencies": {
+    "browserify": "^16.2.3",
+    "rimraf": "^2.6.2",
+    "uglify-es": "^3.3.9"
+  }
+}

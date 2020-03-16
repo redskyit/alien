@@ -1,0 +1,10 @@
+.svn
+.svnignore
+alien-*.tgz
+publish.sh
+dist
+node_modules
+tests/rmc.js
+tests/timesheet.js
+tests/timesheet.sh
+tests/timesheet.tmpl
