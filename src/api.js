@@ -37,5 +37,28 @@ function handleASPNETSessionCookie({ state, cookies }) {
   }
 }
 
-module.exports = { lpad, S, showSummary, showResponseTimePercentages, handleASPNETSessionCookie };
+function showFailedRequests(results) {
+  results.forEach(result => {
+    if (result.status < 200 || result.status > 299) {
+      const text = [];
+      const errors = result.responseText.match(/<pre>(.*?)<\/pre>/gs);
+      if (errors) {
+        errors.forEach(error => {
+          text.push(error.substr(5,error.length - 11).replace(/<[\/]*font[^>]*>/g, ""));
+        });
+      } else {
+        text.push(result.responseText);
+      }
+      console.log(`> B${result.batch}R${result.request} ${result.status} ${result.statusText} ${text.join('')}`);
+    }
+  });
+}
+
+module.exports = {
+  lpad, S,
+  showSummary,
+  showResponseTimePercentages,
+  handleASPNETSessionCookie,
+  showFailedRequests,
+};
 // vi:ts=2 sw=2 expandtab

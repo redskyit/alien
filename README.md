@@ -125,34 +125,40 @@ The Alien API is an interface provided to a test module to provide information o
 
 ##### `alien.lpad()`
 
-    alien.api.lpad(string, width, z = ' ')
+    alien.lpad(string, width, z = ' ')
 
 Left pads a string, or number to a specified with, and optionally allows the pad character to be specified, with space being the default. Returns the padded string.
 
 ##### `alien.S()`
 
-    alien.api.S(ms)
+    alien.S(ms)
 
 Converts milliseconds to seconds with 3 digits of precision.
    
 ##### `alien.showSummary()`
 
-    alien.api.showSummary(summary, { percents: Boolean })
+    alien.showSummary(summary, { percents: Boolean })
 
 Outputs a summary of the test, and optionally include the table of request percentages vs response time ranges.
 
 ##### `alien.showResponseTimePercentages()`
 
-    alien.api.showResponseTimePercentages(summary.percents);
+    alien.showResponseTimePercentages(summary.percents);
 
 Outputs the table of request percentages vs response time ranges.
 
 ##### `alien.handleASPNETSessionCookie()`
 
-    alien.api.handleASPNETSessionCookie(alien.run);
+    alien.handleASPNETSessionCookie(alien.run);
     return { url: "...", cookies: alien.run.state.cookies, headers: [] };
 
 Picks up any `ASP.NET_SessionId` cookie sent by the server, and updates `alien.run.state.cookies` to include that cookie, which can then be sent back to the server so that subsequent requests run in the same session.
+
+##### `alien.showFailedRequests()`
+
+    alien.showFailedRequests(results)
+
+Dumps details of each failed request from the request results. It tries to extract error information from the response text and display that, or failing that will dump the whole response text.
 
 ##### `alien.args`
 
