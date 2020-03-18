@@ -123,35 +123,31 @@ The next method returns details of the next request as an object with the follow
 
 The Alien API is an interface provided to a test module to provide information or assist it in generating requests or stats.
 
-##### `alien.api`
-
-This is a set of helper functions to assist the test module.
-
-##### `alien.api.lpad()`
+##### `alien.lpad()`
 
     alien.api.lpad(string, width, z = ' ')
 
 Left pads a string, or number to a specified with, and optionally allows the pad character to be specified, with space being the default. Returns the padded string.
 
-##### `alien.api.S()`
+##### `alien.S()`
 
     alien.api.S(ms)
 
 Converts milliseconds to seconds with 3 digits of precision.
    
-##### `alien.api.showSummary()`
+##### `alien.showSummary()`
 
     alien.api.showSummary(summary, { percents: Boolean })
 
 Outputs a summary of the test, and optionally include the table of request percentages vs response time ranges.
 
-##### `alien.api.showResponseTimePercentages()`
+##### `alien.showResponseTimePercentages()`
 
     alien.api.showResponseTimePercentages(summary.percents);
 
 Outputs the table of request percentages vs response time ranges.
 
-##### `alien.api.handleASPNETSessionCookie()`
+##### `alien.handleASPNETSessionCookie()`
 
     alien.api.handleASPNETSessionCookie(alien.run);
     return { url: "...", cookies: alien.run.state.cookies, headers: [] };

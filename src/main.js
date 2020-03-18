@@ -52,7 +52,7 @@ async function run(argv) {
   const userAgent = `Alien/${VERSION}; http://github/redskyit/alien`;
   let alien = {
     version: VERSION,
-    api,
+    api, ...api,
     args,
     env: process.env,
     tests: { concurrent: concurrentTests },
@@ -81,7 +81,7 @@ async function run(argv) {
 
       // Create a test instance for this test run. It must be separate from other test runs,
       // except for some shared properties, api, args, env, tests and shared.
-      const alienTestInstance = { api, args, env: alien.env, tests: alien.tests, shared: alien.shared, run, userAgent };
+      const alienTestInstance = { ...alien, args: alien.args.slice(0), run };
 
       // Run the test
       await runtest(module, alienTestInstance);
