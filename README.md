@@ -160,6 +160,12 @@ Picks up any `ASP.NET_SessionId` cookie sent by the server, and updates `alien.r
 
 Dumps details of each failed request from the request results. It tries to extract error information from the response text and display that, or failing that will dump the whole response text.
 
+##### `alien.checkMinVersion()`
+
+    alien.checkMinVersion('1.0.6')
+
+Returns true if the version of alien is equal to or greater than the specified version.
+
 ##### `alien.args`
 
 The command line arguments (excluding alien defined arguments). For the default test, these are ignored. For a custom test, this includes all the arguments passed on the command line following the standard alien options.  For example:

@@ -5,7 +5,7 @@ const runtest = require('./runtest');
 const { analyze } = require('./analysis');
 const api = require('./api');
 
-const VERSION = '1.0.4';
+const VERSION = '1.0.6';
 
 // Define main program options
 program.version(VERSION);

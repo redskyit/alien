@@ -8,6 +8,14 @@ function S(ms) {
   return (ms|0) / 1000;
 }
 
+function checkMinVersion(required) {
+  const version = this.version.split('.');
+  const v = required.split('.');
+  if (version[0] != v[0]) return version[0] > v[0];
+  if (version[1] != v[1]) return version[1] > v[1];
+  return version[2] >= v[2];
+}
+
 function showResponseTimePercentages(percents) {
   console.log('');
   console.log(`${lpad('Response Time',20)}/Percent of Requests`);
@@ -56,6 +64,7 @@ function showFailedRequests(results) {
 
 module.exports = {
   lpad, S,
+  checkMinVersion,
   showSummary,
   showResponseTimePercentages,
   handleASPNETSessionCookie,
