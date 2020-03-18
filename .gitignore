@@ -8,3 +8,4 @@ tests/rmc.js
 tests/timesheet.js
 tests/timesheet.sh
 tests/timesheet.tmpl
+tests/timesheet.zip
