@@ -33,6 +33,26 @@ The `-c` option specifies the number of requests that should be run concurrently
 
 The `-t` option specifies the test module to use. The default test module (built into alien) allows for a simple GET request to be repeated. A custom test module allows more control over the types of requests being made.
 
+## Default Module
+
+The default module supports simple HTTP requests. Given just a URL, a GET request is made. To allow arguments to be passed to the default module, add -- before the URL argument. For example:
+
+    alien -n 1 -- http://localhost/ -m <http-method> -b <body> -f <body-file> -e <body-file-encoding> -T <content-type> -H <header-list>
+
+The `-m` option specifies the HTTP method to use, GET, PUT, POST, DELETE etc.
+
+The `-b` option specifies the body of the request as a string.
+
+The `-f` option loads the body of the request from the specified file.
+
+The `-e` option specifies the encoding used by the file specified with the `-f` option. For instance, if the file contains UTF8 encoded text, specify `-e utf8` to treat the body as text content, otherwise it will be treated as a binary stream.
+
+The `-T` option sets the `Content-Type` header.
+
+The `-H` option is a `|` (pipe) separated list of headers, with each header being being `<Header>: <value>` for example
+
+    -H 'Cache-Control: no-cache|Content-Type: text/xml; charset=UTF-8'
+
 ## Test Modules
 
 Test modules are javascript files provided by the user that implement the test module interface. Their task is to feed alien with request details, and to report on results.
