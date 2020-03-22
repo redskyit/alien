@@ -2,9 +2,9 @@
 
 ###### Automated Load Inducing Emulation Network
 
-Alien was developed to overcome a limitation of `ab(1)` (Apache Benchmark) so that each request is generated so that they can be different. It was developed for a specific task and as such it lacks certain functionality out of the box. For example, the default module only supports `GET` requests.
+Alien was developed to overcome a limitation of `ab(1)` (Apache Benchmark) so that each request is generated so that they can be different.
 
-That said, custom modules give `alien` a lot of power. It is possible to mock a whole client-server conversation with a server, and then run those conversations concurrently.
+The custom modules give `alien` a lot of power. It is possible to mock a whole client-server conversation with a server, and then run those conversations concurrently.
 
 ## Build Instructions
 
