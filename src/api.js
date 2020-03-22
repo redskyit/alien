@@ -4,10 +4,6 @@ function lpad(n, width, z = ' ') {
   return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
 }
 
-function S(ms) {
-  return (ms|0) / 1000;
-}
-
 function checkMinVersion(required) {
   const version = this.version.split('.');
   const v = required.split('.');
@@ -29,8 +25,8 @@ function showSummary(summary, { percents } = {}) {
   const { start, end, total, min, max, failed, success, averages } = summary;
   console.log([
     `Success: ${success} Fails: ${failed}`,
-    `Elapsed: ${S(total)}s Min: ${S(min)}s Max: ${S(max)}s`,
-    `Success Avg: ${S(averages.success)}s Fail Avg: ${S(averages.failed)}s`
+    `Elapsed: ${total/1000}s Min: ${min/1000}s Max: ${max/1000}s`,
+    `Success Avg: ${averages.success/1000}s Fail Avg: ${averages.failed/1000}s`
   ].join(' '));
   if (percents) showResponseTimePercentages(summary.percents);
 }
@@ -63,7 +59,7 @@ function showFailedRequests(results) {
 }
 
 module.exports = {
-  lpad, S,
+  lpad,
   checkMinVersion,
   showSummary,
   showResponseTimePercentages,

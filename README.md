@@ -45,7 +45,7 @@ The `-b` option specifies the body of the request as a string.
 
 The `-f` option loads the body of the request from the specified file.
 
-The `-e` option specifies the encoding used by the file specified with the `-f` option. For instance, if the file contains UTF8 encoded text, specify `-e utf8` to treat the body as text content, otherwise it will be treated as a binary stream.
+The `-e` option specifies the encoding used by the file specified width the `-f` option. For instance, if the file contains UTF8 encoded text, specify `-e utf8` to treat the body as text content, otherwise it will be treated as a binary stream.
 
 The `-T` option sets the `Content-Type` header.
 
@@ -81,7 +81,7 @@ async function onunload({ alien })
 
 ***`async function startup({ alien })`***
 
-`startup` is called for a test instance before the test starts, it can be used to initialist test instance (run) state `alien.run.state` which is an object provided by alien that is private to this test instance.
+`startup` is called for a test instance before the test starts, it can be used to initialise the test instance (run) state `alien.run.state` which is an object provided by alien that is private to this test instance.
 
 ***`async function next({ alien, ts, state, results, batchResults, batchIndex, requestIndex })`***
 
@@ -149,12 +149,6 @@ The Alien API is an interface provided to a test module to provide information o
 
 Left pads a string, or number to a specified with, and optionally allows the pad character to be specified, with space being the default. Returns the padded string.
 
-##### `alien.S()`
-
-    alien.S(ms)
-
-Converts milliseconds to seconds with 3 digits of precision.
-   
 ##### `alien.showSummary()`
 
     alien.showSummary(summary, { percents: Boolean })
