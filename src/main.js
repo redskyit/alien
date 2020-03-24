@@ -5,7 +5,7 @@ const runtest = require('./runtest');
 const { analyze } = require('./analysis');
 const api = require('./api');
 
-const VERSION = '1.0.8';
+const VERSION = '1.0.9';
 
 // Define main program options
 program.version(VERSION);
@@ -16,6 +16,8 @@ program
   .option('-c <n>', 'Set concurrent request count')
   .option('-r <n>', 'Set concurrent test count')
   .option('-t <test-module>', 'Optional test module that defines requests')
+  .option('--fail-on-text <text>', 'Fail on response including text')
+  .option('--fail-on-expr <expr>', 'Fail on response matching the regular expression')
   .option('--');
 
 // Loads either the default or named module (-t module.js). 
@@ -88,7 +90,7 @@ async function run(argv) {
 
       // Post test analysis
       run.end = Date.now();
-      run.summary = analyze(run.results, run.start, run.end);
+      run.summary = analyze({ ...run, program });
       if (typeof module.report == "function") {
         await module.report({ alien: alienTestInstance, run, summary: run.summary, results: run.results });
       } else {

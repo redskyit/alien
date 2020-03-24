@@ -9,6 +9,7 @@ module.exports = {
   async onload({ alien }) {
     // parse default module options
     program
+      .option('-v', 'Verbose')
       .option('-b <body>', 'set body of request')
       .option('-f <file>', 'set body of request from file contents')
       .option('-e <encoding>', 'body encoding to use for file (-f)')
@@ -51,6 +52,7 @@ module.exports = {
 
   async report({ alien, results, summary }) {
     alien.showSummary(summary, { percents: true });
+    if (program.V) alien.showAllRequests(results);
   }
 
 };

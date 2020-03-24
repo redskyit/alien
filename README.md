@@ -22,7 +22,7 @@ On successful build the `dist` folder contains the built executables as well as 
 ## Usage
 
 ```
-alien -r [concurrent-tests] -n [request-count] -c [concurrent-requests] -t [test-module.js] [test params]
+alien -r [concurrent-tests] -n [request-count] -c [concurrent-requests] -t [test-module.js] --fail-on-text [text] --fail-on-expr [regex] [test params]
 ```
 
 The `-r` option specifies the number of tests that will be run. By default only one test is run. A test is defined as a series of requests defined by the test module. Separate instances of the test are run concurrently.
@@ -32,6 +32,10 @@ The `-n` option specifies the number or requests a test should make. Requests ar
 The `-c` option specifies the number of requests that should be run concurrently. When specified, requests are bundled into batches of concurrent requests. Batches are run sequentially. So for example, `-n 10 -r 5` will run two sequential batches of 5 concurrent requests.
 
 The `-t` option specifies the test module to use. The default test module (built into alien) allows for a simple GET request to be repeated. A custom test module allows more control over the types of requests being made.
+
+The `--fail-on-text` option will cause a response from the server to be treated as a failure, if it succeeds but the body of the response contains the string specified by this option.
+
+The `--fail-on-expr` option will cause a response from the server to be treated as a failure, if it succeeds but the body of the response matches the regular expression specified by this option.
 
 ## Default Module
 

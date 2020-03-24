@@ -4,6 +4,10 @@ function lpad(n, width, z = ' ') {
   return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
 }
 
+function S(ms) {
+  return (ms|0) / 1000;
+}
+
 function checkMinVersion(required) {
   const version = this.version.split('.');
   const v = required.split('.');
@@ -25,8 +29,8 @@ function showSummary(summary, { percents } = {}) {
   const { start, end, total, min, max, failed, success, averages } = summary;
   console.log([
     `Success: ${success} Fails: ${failed}`,
-    `Elapsed: ${total/1000}s Min: ${min/1000}s Max: ${max/1000}s`,
-    `Success Avg: ${averages.success/1000}s Fail Avg: ${averages.failed/1000}s`
+    `Elapsed: ${S(total)}s Min: ${S(min)}s Max: ${S(max)}s`,
+    `Success Avg: ${S(averages.success)}s Fail Avg: ${S(averages.failed)}s`
   ].join(' '));
   if (percents) showResponseTimePercentages(summary.percents);
 }
@@ -41,21 +45,30 @@ function handleASPNETSessionCookie({ state, cookies }) {
   }
 }
 
+function showRequest(result) {
+  const text = [];
+  const errors = result.responseText.match(/<pre>(.*?)<\/pre>/gs);
+  if (errors) {
+    errors.forEach(error => {
+      text.push(error.substr(5,error.length - 11).replace(/<[\/]*font[^>]*>/g, ""));
+    });
+  } else {
+    text.push(result.responseText);
+  }
+  console.log(`> B${result.batch}:R${result.request} ${result.status} ${result.statusText} ${text.join('')}`);
+}
+
 function showFailedRequests(results) {
+  // Note: (forEach + if) is faster than (filter + forEach).
   results.forEach(result => {
     if (result.status < 200 || result.status > 299) {
-      const text = [];
-      const errors = result.responseText.match(/<pre>(.*?)<\/pre>/gs);
-      if (errors) {
-        errors.forEach(error => {
-          text.push(error.substr(5,error.length - 11).replace(/<[\/]*font[^>]*>/g, ""));
-        });
-      } else {
-        text.push(result.responseText);
-      }
-      console.log(`> B${result.batch}R${result.request} ${result.status} ${result.statusText} ${text.join('')}`);
+      showRequest();
     }
   });
+}
+
+function showAllRequests(results) {
+  results.forEach(showRequest);
 }
 
 module.exports = {
@@ -65,5 +78,6 @@ module.exports = {
   showResponseTimePercentages,
   handleASPNETSessionCookie,
   showFailedRequests,
+  showAllRequests,
 };
 // vi:ts=2 sw=2 expandtab

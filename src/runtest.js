@@ -26,7 +26,7 @@ function makeHeaders(alien, headers, cookies) {
   return new Headers(meta);
 }
 
-async function HTTP(request, { alien, batchIndex, requestIndex, results, cookies }) {
+async function HTTP(request, { alien, batchIndex, requestIndex, results, cookies, test }) {
   const { url, method = 'GET', body, headers } = request;
   const start = Date.now();
   const res = await fetch(url, { method, body, headers: makeHeaders(alien, headers, request.cookies) });
@@ -47,6 +47,9 @@ async function HTTP(request, { alien, batchIndex, requestIndex, results, cookies
     headers: res.headers.raw(),
   };
   processSetCookies(cookies, result);
+  if (typeof test.onresult == "function") {
+    test.onresult({ alien, result });
+  }
   results.push(result);
 }
 
@@ -59,18 +62,25 @@ module.exports = async function runtest(test, alien) {
     await test.startup({ alien });
   }
 
+  let batchResults = [];
   while (i < requests) {
     const pending = [];
-    const batchResults = i > 0 ? results.slice(i-concurrent) : [];
+    if (typeof test.onbatchstart == "function") {
+      test.onbatchstart({ alien, batchIndex });
+    }
     for (let j = i; j < requests && j < i + concurrent; j++) {
       pending.push(
         (async function(requestIndex, batchIndex) {
           const request =  await test.next({ ts: TIMESTAMP(), state, results, batchResults, batchIndex, requestIndex, alien })
-          return HTTP(request, { alien, batchIndex, requestIndex, results, cookies });
+          return HTTP(request, { alien, batchIndex, requestIndex, results, cookies, test });
         })(j, batchIndex)
       );
     }
     await Promise.all(pending);
+    batchResults = results.slice(-concurrent);
+    if (typeof test.onbatchend == "function") {
+      test.onbatchend({ alien, batchResults, batchIndex });
+    }
     i += concurrent;
     batchIndex ++;
   }

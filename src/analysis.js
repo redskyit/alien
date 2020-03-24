@@ -1,4 +1,3 @@
-
 function calculatePercents(percents, total) {
   const keys = Object.keys(percents);
   const min = keys[0]|0;
@@ -17,8 +16,9 @@ function calculatePercents(percents, total) {
   return slots;
 }
 
-function analyze(results, start, end) {
+function analyze({ results, start, end, program }) {
   const analysis = { start, end, total: (end - start), min: (end - start), max: 0, failed: 0, success: 0 };
+  const statuses = {};
   let ts = 0;
   let tf = 0;
 
@@ -28,8 +28,16 @@ function analyze(results, start, end) {
   results.forEach(result => {
     const { status, took } = result;
 
+    let success = status >= 200 && status <= 200;
+    if (program.failOnText && result.responseText.indexOf(program.failOnText) > -1) {
+      success = false;
+    }
+    if (program.failOnExpr && result.responseText.match(new RegExp(program.failOnExpr)) != null) {
+      success = false;
+    }
+
 	  // count success and failed requests and work out total time (used for averages below)
-    if (status >= 200 && status <= 200) {
+    if (success) {
       analysis.success ++;
       ts += took;
     } else {
@@ -37,6 +45,10 @@ function analyze(results, start, end) {
       tf += took;
     }
 
+    // Counts by status
+    statuses[status] = (statuses[status] || 0) + 1;
+
+    // counts by timing
 	  counts[took|0] = (counts[took]||0) + 1;
 
 	  // track min and max 
@@ -51,6 +63,7 @@ function analyze(results, start, end) {
     total: (ts + tf) / results.length
   };
   analysis.percents = calculatePercents(counts, results.length);
+  analysis.statuses = statuses;
   return analysis;
 }
 
