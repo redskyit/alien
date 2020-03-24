@@ -72,7 +72,10 @@ A single test module is used for all concurrent tests. The module must take step
 ```javascript
 async function onload({ alien })
   async function startup({ alien })
-    async function next({ alien, ... })
+    async function onbatchstart({ alien, batchIndex })
+      async function next({ alien, ... })
+      async function onresult({ alien, result })
+    async function onbatchend({ alien, batchIndex, batchResults })
     ...
   async function shutdown({ alien })
   async function report({ alien, ... })
@@ -86,6 +89,10 @@ async function onunload({ alien })
 ***`async function startup({ alien })`***
 
 `startup` is called for a test instance before the test starts, it can be used to initialise the test instance (run) state `alien.run.state` which is an object provided by alien that is private to this test instance.
+
+***`async function onbatchstart({ alien, batchIndex })`***
+
+`onbatchstart` is called before the first request of a batch of concurrent requests is started. It is passed the `batchIndex`.
 
 ***`async function next({ alien, ts, state, results, batchResults, batchIndex, requestIndex })`***
 
@@ -121,6 +128,16 @@ The next method returns details of the next request as an object with the follow
 || `{ 'Content-Type': 'text/xml', ... }`
 | `cookies` | Cookies to send to the server:
 || `{ 'User-Agent': 'example-test-module', ... }`
+
+***`async function onresult({ alien, result })`***
+
+`onbatchend` is called for each result that completes. It is passed the `result` details. If the `result` object is updated those updated will be reflected in both batch results and final results.
+
+This method can be used to parse responses, for example to check for failure conditions and modify the status of the result accordingly.
+
+***`async function onbatchend({ alien, batchIndex })`***
+
+`onbatchend` is called after all the results are in for the current batch of concurrent requests is started. It is passed the `batchIndex` and an array of `batchResults`.
 
 ***`async function shutdown({ alien, results })`***
 
