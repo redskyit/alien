@@ -1,6 +1,6 @@
 {
   "name": "alien",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Automated Load Inducing Emulation Network",
   "main": "index.js",
   "scripts": {
