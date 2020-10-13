@@ -1,5 +1,5 @@
 function next() {
-	  return { url: 'http://localhost/' };
+	return { url: 'http://localhost/' };
 }
 function report({ results, summary }) {
   console.log(summary);

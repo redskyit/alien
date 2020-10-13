@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 const { Headers } = fetch;
 
 function TIMESTAMP() {
-  return (new Date).toISOString().replace(/[-:]/g,"").replace(/[T.]/g,'-').substr(0,19);
+  return (new Date()).toISOString().replace(/[-:]/g,"").replace(/[T.]/g,'-').substr(0,19);
 }
 
 function processSetCookies(cookies, result) {
@@ -33,11 +33,11 @@ async function HTTP(request, { alien, batchIndex, requestIndex, results, cookies
   const took = Date.now() - start;
   const { status, statusText } = res;
   const responseText = await res.text();
-  const result = { 
+  const result = {
     batch: batchIndex, request: requestIndex,
-    url, 
-    method, 
-    bodyLength: body ? body.length : 0, 
+    url,
+    method,
+    bodyLength: body ? body.length : 0,
     start,
     took,
     status,
@@ -62,6 +62,11 @@ module.exports = async function runtest(test, alien) {
     await test.startup({ alien });
   }
 
+  async function startRequest(requestIndex, batchIndex) {
+    const request =  await test.next({ ts: TIMESTAMP(), state, results, batchResults, batchIndex, requestIndex, alien });
+    return HTTP(request, { alien, batchIndex, requestIndex, results, cookies, test });
+  }
+
   let batchResults = [];
   while (i < requests) {
     const pending = [];
@@ -69,12 +74,7 @@ module.exports = async function runtest(test, alien) {
       test.onbatchstart({ alien, batchIndex });
     }
     for (let j = i; j < requests && j < i + concurrent; j++) {
-      pending.push(
-        (async function(requestIndex, batchIndex) {
-          const request =  await test.next({ ts: TIMESTAMP(), state, results, batchResults, batchIndex, requestIndex, alien })
-          return HTTP(request, { alien, batchIndex, requestIndex, results, cookies, test });
-        })(j, batchIndex)
-      );
+      pending.push(startRequest(j, batchIndex));
     }
     await Promise.all(pending);
     batchResults = results.slice(-concurrent);
@@ -88,6 +88,6 @@ module.exports = async function runtest(test, alien) {
   if (typeof test.shutdown == "function") {
     await test.shutdown({ alien, results });
   }
-}
+};
 
 // vi: ts=2 sw=2 expandtab

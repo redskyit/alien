@@ -18,6 +18,7 @@
   "dependencies": {
     "commander": "^4.1.1",
     "encoding": "^0.1.12",
+    "jshint": "^2.11.2",
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {

@@ -20,14 +20,14 @@ program
   .option('--fail-on-expr <expr>', 'Fail on response matching the regular expression')
   .option('--');
 
-// Loads either the default or named module (-t module.js). 
+// Loads either the default or named module (-t module.js).
 function loadModule(program) {
   const { args, T } = program;
   if (T) {
     const modulefn = path.isAbsolute(T) ? T : `${process.cwd()}/${T}`;
     process.chdir(path.dirname(modulefn));
     return { module: require(modulefn), custom: modulefn };
-  } 
+  }
   return { module: require('./default') };
 }
 
@@ -39,7 +39,7 @@ async function run(argv) {
     console.log(`Version ${program._version}`);
   }
 
-  // Load test or default module. 
+  // Load test or default module.
   const { module } = loadModule(program);
 
   // Clone program args
@@ -66,38 +66,39 @@ async function run(argv) {
     await module.onload({ alien });
   }
 
-  // Run concurrent tests (or just the one)
+  async function startTest(test) {
+
+    // test run context
+    const run = {
+      test,
+      requests: requestsPerTest,
+      concurrent: concurrentRequests,
+      results: [],
+      start: Date.now(),
+      cookies: {},
+      state: {},
+    };
+
+    // Create a test instance for this test run. It must be separate from other test runs,
+    // except for some shared properties, api, args, env, tests and shared.
+    const alienTestInstance = { ...alien, args: alien.args.slice(0), run };
+
+    // Run the test
+    await runtest(module, alienTestInstance);
+
+    // Post test analysis
+    run.end = Date.now();
+    run.summary = analyze({ ...run, program });
+    if (typeof module.report == "function") {
+      await module.report({ alien: alienTestInstance, run, summary: run.summary, results: run.results });
+    } else {
+      console.log(run.summary);
+    }
+  }
+
+  // Start concurrent tests (or just the one)
   for (let i = 0; i < concurrentTests; i++) {
-    tests.push((async function(test) {
-
-      // test run context
-      const run = {
-        test,
-        requests: requestsPerTest, 
-        concurrent: concurrentRequests,
-        results: [],
-        start: Date.now(),
-        cookies: {},
-        state: {},
-      };
-
-      // Create a test instance for this test run. It must be separate from other test runs,
-      // except for some shared properties, api, args, env, tests and shared.
-      const alienTestInstance = { ...alien, args: alien.args.slice(0), run };
-
-      // Run the test
-      await runtest(module, alienTestInstance);
-
-      // Post test analysis
-      run.end = Date.now();
-      run.summary = analyze({ ...run, program });
-      if (typeof module.report == "function") {
-        await module.report({ alien: alienTestInstance, run, summary: run.summary, results: run.results });
-      } else {
-        console.log(run.summary);
-      }
-
-    })(i));
+    tests.push(startTest(i));
   }
 
   // Wait for all tests to finish
