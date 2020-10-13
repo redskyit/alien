@@ -131,13 +131,13 @@ The next method returns details of the next request as an object with the follow
 
 ***`async function onresult({ alien, result })`***
 
-`onbatchend` is called for each result that completes. It is passed the `result` details. If the `result` object is updated those updated will be reflected in both batch results and final results.
+`onresult` is called for each request that completes. It is passed the `result` details. If the `result` object is updated those updates will be reflected in both batch results and final results.
 
 This method can be used to parse responses, for example to check for failure conditions and modify the status of the result accordingly.
 
 ***`async function onbatchend({ alien, batchIndex })`***
 
-`onbatchend` is called after all the results are in for the current batch of concurrent requests is started. It is passed the `batchIndex` and an array of `batchResults`.
+`onbatchend` is called after all the results are in for the current batch of concurrent requests. It is passed the `batchIndex` and an array of `batchResults`.
 
 ***`async function shutdown({ alien, results })`***
 
