@@ -29,7 +29,7 @@ The `-r` option specifies the number of tests that will be run. By default only 
 
 The `-n` option specifies the number or requests a test should make. Requests are run sequentially unless the `-c` option is also specified.
 
-The `-c` option specifies the number of requests that should be run concurrently. When specified, requests are bundled into batches of concurrent requests. Batches are run sequentially. So for example, `-n 10 -r 5` will run two sequential batches of 5 concurrent requests.
+The `-c` option specifies the number of requests that should be run concurrently. When specified, requests are bundled into batches of concurrent requests. Batches are run sequentially. So for example, `-n 10 -c 5` will run two sequential batches of 5 concurrent requests.
 
 The `-t` option specifies the test module to use. The default test module (built into alien) allows for a simple GET request to be repeated. A custom test module allows more control over the types of requests being made.
 
@@ -124,7 +124,7 @@ The next method returns details of the next request as an object with the follow
 | `method` | The request method, GET, PUT, POST, DELETE etc. Optional, the default is `GET`
 | `url` | The request url, including any query string
 | `body` | The request body. Optional.
-| `headers` | Request headers as key-value pairs: 
+| `headers` | Request headers as key-value pairs:
 || `{ 'Content-Type': 'text/xml', ... }`
 | `cookies` | Cookies to send to the server:
 || `{ 'User-Agent': 'example-test-module', ... }`
@@ -154,10 +154,10 @@ This method can be used to parse responses, for example to check for failure con
 ## Examples
 
 ##### Basic
-`alien -n 100 http://localhost/` 
+`alien -n 100 http://localhost/`
 ##### Basic Concurrent
 `alien -n 100 -c 10 http://localhost/`
-##### Module 
+##### Module
 `alien -n 100 -t example.js http://localhost/ 123 TEST`
 
 ## Alien API
