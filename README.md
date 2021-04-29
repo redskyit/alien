@@ -135,7 +135,7 @@ The next method returns details of the next request as an object with the follow
 
 This method can be used to parse responses, for example to check for failure conditions and modify the status of the result accordingly.
 
-***`async function onbatchend({ alien, batchIndex })`***
+***`async function onbatchend({ alien, batchIndex, batchResults })`***
 
 `onbatchend` is called after all the results are in for the current batch of concurrent requests. It is passed the `batchIndex` and an array of `batchResults`.
 
