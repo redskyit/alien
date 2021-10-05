@@ -9,3 +9,5 @@ tests/timesheet.js
 tests/timesheet.sh
 tests/timesheet.tmpl
 tests/timesheet.zip
+
+.DS_Store
