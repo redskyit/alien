@@ -5,6 +5,7 @@ publish.sh
 dist
 node_modules
 tests/rmc.js
+tests/rmc.sh
 tests/timesheet.js
 tests/timesheet.sh
 tests/timesheet.tmpl
