@@ -19,7 +19,7 @@
     "commander": "^4.1.1",
     "encoding": "^0.1.12",
     "jshint": "^2.13.4",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.7"
   },
   "devDependencies": {
     "browserify": "^16.2.3",
